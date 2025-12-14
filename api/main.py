@@ -1,13 +1,27 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import qrcode
-import boto3
 import os
 from io import BytesIO
+from motor.motor_asyncio import AsyncIOMotorClient
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Loading Environment variable (AWS Access Key and Secret Key)
 from dotenv import load_dotenv
 load_dotenv()
+
+MONGO_URL = os.getenv("MONGO_URL")
+client = AsyncIOMotorClient(MONGO_URL)
+db = client.qr_db
+collection = db.qr_codes
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
 
 app = FastAPI()
 
@@ -23,49 +37,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# # AWS S3 Configuration
-# s3 = boto3.client(
-#     's3',
-#     aws_access_key_id= os.getenv("AWS_ACCESS_KEY"),
-#     aws_secret_access_key= os.getenv("AWS_SECRET_KEY"))
-
-# bucket_name = 'YOUR_BUCKET_NAME' # Add your bucket name here
-
 @app.post("/generate-qr/")
 async def generate_qr(url: str):
 
-    return {"message": f"QR Code generated successfully with the {url}."}
-    # Generate QR Code
-    # qr = qrcode.QRCode(
-    #     version=1,
-    #     error_correction=qrcode.constants.ERROR_CORRECT_L,
-    #     box_size=10,
-    #     border=4,
-    # )
-    # qr.add_data(url)
-    # qr.make(fit=True)
+    # Generate QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
 
-    # img = qr.make_image(fill_color="black", back_color="white")
-    
-    # # Save QR Code to BytesIO object
-    # img_byte_arr = BytesIO()
-    # img.save(img_byte_arr, format='PNG')
-    # img_byte_arr.seek(0)
+    img = qr.make_image(fill_color="black", back_color="white")
 
-    # # Generate file name for S3
-    # file_name = f"qr_codes/{url.split('//')[-1]}.png"
+    # Save image to memory
+    img_byte_arr = BytesIO()
+    img.save(img_byte_arr, format="PNG")
+    img_byte_arr.seek(0)
 
+    # Upload to Cloudinary
+    upload_result = cloudinary.uploader.upload(
+        img_byte_arr,
+        folder="qr_codes"
+    )
 
-    # try:
-    #     # Upload to S3
-    #     s3.put_object(Bucket=bucket_name, Key=file_name, Body=img_byte_arr, ContentType='image/png', ACL='public-read')
-        
-    #     # Generate the S3 URL
-    #     s3_url = f"https://{bucket_name}.s3.amazonaws.com/{file_name}"
-    #     return {"qr_code_url": s3_url}
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=str(e))
-    
+    await collection.insert_one({"url": url, "qr_code_url": upload_result["secure_url"]})
+
+    return {
+        "message": f"QR Code generated successfully {url}",
+        "qr_code_url": upload_result["secure_url"]
+    }
+
     
 @app.get("/")
 async def root():
