@@ -9,8 +9,11 @@ jobs:
             - name: checkout
               uses: actions/checkout@v4
             - name: build image
-              run: docker build ./api/ -t puleena/docker-project-for-prac:latest
+              run: |
+                 docker build ./api/ -t puleena/docker-project-for-prac:latest
+                 docker build ./front-end-nextjs/ -t puleena/docker-project-for-prac-frontend:latest
             - name: push image to docker hub
               run: |
                 docker login -u puleena -p ${{ secrets.DOCKER_HUB_TOKEN }}
                 docker push puleena/docker-project-for-prac:latest
+                docker push puleena/docker-project-for-prac-frontend:latest
