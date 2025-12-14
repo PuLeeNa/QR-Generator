@@ -34,7 +34,7 @@ app.add_middleware(
 @app.post("/generate-qr/")
 async def generate_qr(url: str):
 
-    return {"message": f"QR Code generated successfully with {url}."}
+    return {"message": f"QR Code generated successfully with the {url}."}
     # Generate QR Code
     # qr = qrcode.QRCode(
     #     version=1,
@@ -69,6 +69,6 @@ async def generate_qr(url: str):
     
 @app.get("/")
 async def root():
-    return {"message": "QR Code Generator API is running on i dont know."}
+    return {"message": "QR Code Generator API is running."}
 
     
