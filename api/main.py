@@ -25,7 +25,7 @@ cloudinary.config(
 
 app = FastAPI()
 
-# Allowing CORS for local testing and deployed front-end
+# Allowing CORS for deployed front-end and local development
 origins = [
     "http://localhost:3000",
     "https://qr-generatorqr.netlify.app"

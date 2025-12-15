@@ -1,4 +1,4 @@
-name: Build and Publish image to Docker Hub
+name: Build and Publish image to Docker Hub and Trigger Render Deployment
 on:
     push:
         branches:
@@ -22,3 +22,7 @@ jobs:
                 docker login -u puleena -p ${{ secrets.DOCKER_HUB_TOKEN }}
                 docker push puleena/docker-project-for-prac:latest
                 docker push puleena/docker-project-for-prac-frontend:latest
+
+            - name: Trigger Render Deployment
+              run: |
+                curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_API }}"
