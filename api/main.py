@@ -27,8 +27,8 @@ app = FastAPI()
 
 # Allowing CORS for deployed front-end and local development
 origins = [
-    "http://localhost:3000",
-    "https://qr-generatorqr.netlify.app"
+    "https://qr-generatorqr.netlify.app",
+    "http://localhost:3000"
 ]
 
 app.add_middleware(
