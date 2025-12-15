@@ -8,11 +8,13 @@ export default function Home() {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [message, setMessage] = useState("");
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:8000/generate-qr/?url=${url}`
+        `${API_URL}/generate-qr/?url=${url}`
       );
       setMessage(response.data.message);
       setQrCodeUrl(response.data.qr_code_url);
