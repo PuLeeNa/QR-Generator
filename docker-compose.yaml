@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  con-qr-fe:
+    # image: puleena/docker-project-for-prac-frontend
+    build:
+      context: ./front-end-nextjs
+      dockerfile: Dockerfile
+    ports: 
+      - 3000:3000
+    env_file:
+      - ./front-end-nextjs/.env
+
+  con-qr-be:
+    # image: puleena/docker-project-for-prac
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports: 
+      - 8000:8000
+    env_file:
+      - ./api/.env
+
+
+# docker-compose up
