@@ -1,176 +1,251 @@
-# QR-Generator
+# QR Code Generator 🎯
 
-Live Demo - https://qr-generatorqr.netlify.app/
+A modern, full-stack QR Code generator application built with Next.js and FastAPI. Generate QR codes from any URL with cloud storage and database persistence.
 
-It generates QR Codes for the provided URL, the front-end is in NextJS and the API is written in Python using FastAPI.
+**Live Demo:** [https://qr-generatorqr.netlify.app/](https://qr-generatorqr.netlify.app/)
 
-## Application
+## 🚀 Features
 
-**Front-End** - A web application where users can submit URLs.
+- ✨ **Instant QR Code Generation** - Generate QR codes from any URL in seconds
+- 🎨 **Modern UI** - Clean, dark-themed interface with smooth animations
+- 💾 **Cloud Storage** - QR codes stored securely in Cloudinary
+- 🗄️ **Database Persistence** - Metadata saved in MongoDB
+- 📥 **One-Click Download** - Download QR codes instantly
+- 🐳 **Fully Containerized** - Docker and Docker Compose support
 
-**API**: API that receives URLs and generates QR codes. The API stores the QR code images in cloud storage(Cloudinary) and meta data of image in MongoDB.
+## 🏗️ Architecture
 
-## Running locally
+**Frontend:** Next.js 14 application with React hooks and Axios for API calls  
+**Backend:** FastAPI with async MongoDB driver (Motor) and Cloudinary integration  
+**Storage:** Cloudinary for QR code images  
+**Database:** MongoDB for storing URL and QR code metadata
 
-### API
-
-The API code exists in the `api` directory. You can run the API server locally:
-
-- Clone this repo
-- Make sure you are in the `api` directory
-- Create a virtualenv by typing in the following command: `python -m venv .venv`
-- activate env `.venv\Scripts\Activate.ps1`
-- Install the required packages: `pip install -r requirements.txt`
-- Create a `.env` file, and add you AWS Access and Secret key, check `.env.example`
-- Also, change the BUCKET_NAME to your S3 bucket name in `main.py`
-- Run the API server: `uvicorn main:app --reload`
-- Your API Server should be running on port `http://localhost:8000`
-
-### Front-end
-
-The front-end code exits in the `front-end-nextjs` directory. You can run the front-end server locally:
-
-- Clone this repo
-- Make sure you are in the `front-end-nextjs` directory
-- Install the dependencies: `npm install`
-- Run the NextJS Server: `npm run dev`
-- Your Front-end Server should be running on `http://localhost:3000`
-
-## Goal
-
-The goal is to get hands-on with DevOps practices like Containerization, CICD and monitoring.
-
-## Tech Stack
-
-### Front-end
-
-- **Next.js** - React framework for production
-- **Tailwind CSS** - Utility-first CSS framework
-- **JavaScript** - Programming language
-
-### Back-end
-
-- **Python** - Programming language
-- **FastAPI** - Modern web framework for building APIs
-- **Cloudinary** - Cloud storage for QR code images
-- **MongoDB** - NoSQL database for metadata storage
-
-### DevOps
-
-- **Docker** - Containerization
-- **Netlify** - Front-end deployment (current)
-- **Render** - Back-end deployment (current)
-- **CI/CD** - Continuous Integration/Continuous Deployment pipelines
-
-## Docker Deployment
-
-### Running with Docker
-
-Both the API and front-end can be containerized using Docker.
-
-#### API Docker Setup
-
-```bash
-cd api
-docker build -t qr-api .
-docker run -p 8000:8000 --env-file .env qr-api
-```
-
-#### Front-end Docker Setup
-
-```bash
-cd front-end-nextjs
-docker build -t qr-frontend .
-docker run -p 3000:3000 qr-frontend
-```
-
-## Environment Variables
-
-### API (.env)
-
-Create a `.env` file in the `api` directory with the following variables:
-
-```env
-# Cloud Storage (Cloudinary)
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-# MongoDB
-MONGODB_URI=your_mongodb_connection_string
-MONGODB_DB_NAME=qr_generator
-
-# Optional
-PORT=8000
-```
-
-### Front-end (.env.local)
-
-Create a `.env.local` file in the `front-end-nextjs` directory:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-## Testing
-
-### API Tests
-
-Run the API tests using pytest:
-
-```bash
-cd api
-pytest test_main.py -v
-```
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 devops-qr-code/
-├── api/                    # FastAPI backend
-│   ├── main.py            # Main API application
-│   ├── test_main.py       # API tests
-│   ├── requirements.txt   # Python dependencies
-│   └── Dockerfile         # API container configuration
-├── front-end-nextjs/      # Next.js frontend
-│   ├── src/               # Source files
-│   │   └── app/          # Next.js app directory
-│   ├── Dockerfile         # Frontend container configuration
-│   ├── package.json       # Node dependencies
-│   └── next.config.js     # Next.js configuration
-└── README.md
+├── api/                          # FastAPI backend
+│   ├── main.py                   # API application with endpoints
+│   ├── test_main.py              # API tests
+│   ├── requirements.txt          # Python dependencies
+│   ├── Dockerfile                # Backend container config
+│   └── .env                      # Environment variables (not committed)
+├── front-end-nextjs/             # Next.js frontend
+│   ├── src/
+│   │   └── app/
+│   │       ├── page.js           # Main QR generator page
+│   │       ├── layout.js         # App layout
+│   │       └── globals.css       # Global styles
+│   ├── Dockerfile                # Frontend container config
+│   ├── package.json              # Node dependencies
+│   ├── next.config.js            # Next.js configuration
+│   └── .env                      # Environment variables (not committed)
+├── docker-compose.yaml           # Docker Compose orchestration
+└── README.md                     # This file
 ```
 
-## Features
+## 🛠️ Tech Stack
 
-- ✅ Generate QR codes from URLs
-- ✅ Store QR codes in cloud storage (Cloudinary)
-- ✅ Save metadata in MongoDB
-- ✅ Responsive web interface
-- ✅ RESTful API
-- ✅ Containerized deployment
-- ✅ Fast and efficient
+### Frontend
 
-## API Endpoints
+- **Next.js 14** - React framework with App Router
+- **React 18** - UI library with hooks
+- **Axios** - HTTP client for API requests
+- **Tailwind CSS** - Utility-first CSS framework
 
-### `POST /generate-qr`
+### Backend
 
-Generate a QR code for a given URL.
+- **Python 3.11+** - Programming language
+- **FastAPI** - High-performance async web framework
+- **Motor** - Async MongoDB driver
+- **Cloudinary SDK** - Cloud storage integration
+- **QRCode** - QR code generation library
+- **Uvicorn** - ASGI server
 
-**Request Body:**
+### DevOps & Infrastructure
 
-```json
-{
-  "url": "https://example.com"
-}
+- **Docker** - Containerization platform
+- **Docker Compose** - Multi-container orchestration
+- **MongoDB** - NoSQL database
+- **Cloudinary** - Cloud storage service
+
+## 🚀 Quick Start
+
+### Running with Docker Compose
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd devops-qr-code
+   ```
+
+2. **Set up environment variables**
+
+   Create `.env` in the `api` directory:
+
+   ```env
+   MONGO_URL=mongodb://localhost:27017
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+
+   Create `.env` in the `front-end-nextjs` directory:
+
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   ```
+
+3. **Start the application**
+
+   ```bash
+   docker-compose up
+   ```
+
+4. **Access the application**
+   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - Backend API: [http://localhost:8000](http://localhost:8000)
+
+### Running Locally (Development)
+
+#### Backend Setup
+
+1. **Navigate to API directory**
+
+   ```bash
+   cd api
+   ```
+
+2. **Create and activate virtual environment**
+
+   ```bash
+   # Windows
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Create `.env` file**
+
+   ```env
+   MONGO_URL=mongodb://localhost:27017
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+
+5. **Run the API server**
+   ```bash
+   uvicorn main:app --reload
+   ```
+   Server runs at: [http://localhost:8000](http://localhost:8000)
+
+#### Frontend Setup
+
+1. **Navigate to frontend directory**
+
+   ```bash
+   cd front-end-nextjs
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Create `.env` file**
+
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   ```
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+   Server runs at: [http://localhost:3000](http://localhost:3000)
+
+## 🐳 Docker Commands
+
+### Build individual containers
+
+```bash
+# Build backend
+cd api
+docker build -t qr-api .
+
+# Build frontend
+cd front-end-nextjs
+docker build -t qr-frontend .
 ```
 
-**Response:**
+### Run individual containers
 
-```json
-{
-  "qr_code_url": "https://cloudinary.com/...",
-  "original_url": "https://example.com",
-  "created_at": "2025-12-15T10:30:00Z"
-}
+```bash
+# Run backend
+docker run -p 8000:8000 --env-file ./api/.env qr-api
+
+# Run frontend
+docker run -p 3000:3000 --env-file ./front-end-nextjs/.env qr-frontend
 ```
+
+### Docker Compose commands
+
+```bash
+# Start services
+docker-compose up
+
+# Start in detached mode
+docker-compose up -d
+```
+
+## 🎯 Usage
+
+1. **Open the application** in your browser at [http://localhost:3000](http://localhost:3000)
+2. **Enter a URL** in the input field (e.g., `https://example.com`)
+3. **Click "Generate QR Code"** - an animated spinner will show during generation
+4. **View the QR code** displayed on the screen
+5. **Download** the QR code by clicking the "Download QR Code" button
+
+## 🌟 Key Features Explained
+
+### Cloud Storage Integration
+
+All generated QR codes are automatically uploaded to Cloudinary, ensuring fast delivery and reliable storage without local file system dependencies.
+
+### Database Persistence
+
+Metadata (original URL and Cloudinary URL) is stored in MongoDB for future reference and analytics.
+
+
+## 🚢 Deployment
+
+### Current Deployments
+
+- **Frontend:** Netlify - [https://qr-generatorqr.netlify.app/](https://qr-generatorqr.netlify.app/)
+- **Backend:** Render
+
+### Docker Images
+
+Pre-built Docker images are available:
+
+- Frontend: `puleena/docker-project-for-prac-frontend`
+- Backend: `puleena/docker-project-for-prac`
+
+## 🙏 Acknowledgments
+
+- FastAPI for the excellent async framework
+- Next.js for the powerful React framework
+- Cloudinary for reliable cloud storage
+- MongoDB for flexible data storage
+
+---
+
+**Built with ❤️ for learning DevOps practices including Containerization, CI/CD, and Cloud Deployment**
